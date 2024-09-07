@@ -13,7 +13,9 @@
     "@react-navigation/native": "*",
     "react-native-safe-area-context": "*",
     "styled-components": "*",
-    "phosphor-react-native": "*"
+    "phosphor-react-native": "*",
+    "react-native-reanimated": "*",
+    "react-native-gesture-handler": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp package-lock.json apps/mobile",

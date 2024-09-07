@@ -1,22 +1,17 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
-import { type ReactNode } from 'react';
-import {
-  View,
-  TouchableHighlight,
-  Pressable,
-  type AnimatableNumericValue,
-} from 'react-native';
+import { View } from 'react-native';
 import { styled } from 'styled-components/native';
-import { Check, House, X } from 'phosphor-react-native';
+import { Check, House, X, ArrowsClockwise } from 'phosphor-react-native';
 
 import { ScreenProps } from '../App.types';
-import { THEME, ThemeColors } from '../theme';
+import { theme } from '../theme';
+
+import { CardFeature } from '../features/card';
 
 import { SafeArea } from '../components/safe-area';
 import { FlexCol, FlexRow } from '../components/flex';
-import { InlineBlock } from '../components/inline-block';
-
-import { Text } from '../components/text';
+import { CircleButton } from '../components/button';
+import { useState } from 'react';
 
 const FullScreenView = styled.View`
   flex: 1;
@@ -31,50 +26,17 @@ const AbsoluteSafeArea = styled(SafeArea)`
   width: 100%;
 `;
 
-const CircleButton = ({
-  height,
-  width,
-  backgroundColor,
-  borderColor,
-  children,
-  disabled,
-}: {
-  height: number;
-  width: number;
-  backgroundColor?: ThemeColors;
-  children: ReactNode;
-  disabled?: boolean;
-  borderColor?: ThemeColors;
-}) => {
-  const bg = backgroundColor ? THEME.colors[backgroundColor] : '#fff';
-  const bColor = borderColor ? THEME.colors[borderColor] : '#fff';
-
-  return (
-    <Pressable
-      style={{
-        height,
-        width,
-        display: 'flex',
-        backgroundColor: bg,
-        borderRadius: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: disabled ? 0.6 : 1,
-        borderColor: bColor,
-        borderWidth: 1,
-      }}
-      disabled={disabled}
-    >
-      {children}
-    </Pressable>
-  );
-};
-
 export const HomeScreen = ({ navigation }: ScreenProps<'Home'>) => {
+  const [data, setData] = useState([
+    { id: '123' },
+    { id: '234' },
+    { id: '567' },
+  ]);
+
   return (
     <FullScreenView style={{ backgroundColor: '#000' }}>
-      <View style={{ flex: 1, backgroundColor: THEME.colors.secondary }} />
-      <View style={{ flex: 1, backgroundColor: '#ebebec' }} />
+      <View style={{ flex: 1, backgroundColor: theme.colors.primaryDark }} />
+      <View style={{ flex: 1.5, backgroundColor: '#ebebec' }} />
 
       <AbsoluteSafeArea>
         <FlexCol
@@ -85,55 +47,28 @@ export const HomeScreen = ({ navigation }: ScreenProps<'Home'>) => {
             gap: 30,
           }}
         >
-          <TouchableHighlight
-            style={{
-              backgroundColor: THEME.colors.primaryDark,
-              flex: 1,
-              borderRadius: 20,
-            }}
-          >
-            <FlexCol
-              style={{
-                backgroundColor: THEME.colors.primary,
-                height: '100%',
-                transform: [{ translateY: -8 }],
-                borderRadius: 20,
-                borderColor: THEME.colors.primaryDark,
-                borderWidth: 1,
-                padding: 50,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                display: 'flex',
-              }}
-            >
-              <View />
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 30,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
+          <View style={{ flex: 1, position: 'relative' }}>
+            {data.map((cardItem, idx) => (
+              <CardFeature
+                key={cardItem.id}
+                idx={idx}
+                id={cardItem.id}
+                onScreenExit={() => {
+                  setData((prevState) => {
+                    // add a new item to the start
+                    // and remove the last item.
+                    const newList = [
+                      { id: `${new Date().getMilliseconds()}` },
+                      ...prevState.slice(0, -1),
+                    ];
+                    return newList;
+                  });
                 }}
-              >
-                What are the 3 types of cover on a motor plan?
-              </Text>
-              <FlexCol style={{ alignItems: 'center' }}>
-                <Text style={{ color: '#fff' }}>10/20 completed</Text>
-                <InlineBlock
-                  style={{
-                    backgroundColor: THEME.colors.primaryLight,
-                    paddingVertical: 10,
-                    paddingHorizontal: 20,
-                    borderRadius: 30,
-                  }}
-                >
-                  <Text style={{ color: THEME.colors.secondary }}>
-                    Motor Quiz | Question?
-                  </Text>
-                </InlineBlock>
-              </FlexCol>
-            </FlexCol>
-          </TouchableHighlight>
+                isSwipeable={idx === data.length - 1}
+              />
+            ))}
+          </View>
+
           <View
             style={{
               paddingHorizontal: 8,
@@ -163,9 +98,12 @@ export const HomeScreen = ({ navigation }: ScreenProps<'Home'>) => {
                 <Check size={14} />
               </CircleButton>
             </FlexRow>
-            <CircleButton height={50} width={50} backgroundColor="secondary">
-              <House color="#fff" size={14} />
-            </CircleButton>
+            <FlexRow style={{ alignItems: 'center' }}>
+              <ArrowsClockwise />
+              <CircleButton height={50} width={50} backgroundColor="secondary">
+                <House color="#fff" size={14} />
+              </CircleButton>
+            </FlexRow>
           </View>
         </FlexCol>
       </AbsoluteSafeArea>
