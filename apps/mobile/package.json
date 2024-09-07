@@ -15,10 +15,32 @@
     "styled-components": "*",
     "phosphor-react-native": "*",
     "react-native-reanimated": "*",
-    "react-native-gesture-handler": "*"
+    "react-native-gesture-handler": "*",
+    "jest-expo": "*",
+    "@nx/devkit": "*",
+    "@nx/eslint": "*",
+    "@nx/jest": "*",
+    "@nx/js": "*",
+    "@nx/react": "*",
+    "@nx/web": "*",
+    "@nx/webpack": "*",
+    "chalk": "*",
+    "enhanced-resolve": "*",
+    "fs-extra": "*",
+    "metro-resolver": "*",
+    "node-fetch": "*",
+    "tsconfig-paths": "*",
+    "tslib": "*",
+    "@expo/metro-config": "*",
+    "react-native-svg-transformer": "*",
+    "react": "*",
+    "@react-navigation/native-stack": "*",
+    "expo-asset": "*",
+    "@react-native/assets-registry": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp package-lock.json apps/mobile",
     "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/mobile"
-  }
+  },
+  "devDependencies": {}
 }
