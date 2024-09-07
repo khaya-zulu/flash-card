@@ -32,13 +32,16 @@ export const SafeArea = ({
     <SafeAreaView
       {...props}
       background={background}
-      style={{
-        paddingTop: paddingTop ?? insets.bottom,
-        paddingBottom: paddingBottom ?? insets.bottom,
-        paddingLeft: paddingLeft ?? insets.left,
-        paddingRight: paddingRight ?? insets.right,
-        ...props.style,
-      }}
+      style={[
+        {
+          paddingTop: paddingTop ?? insets.bottom,
+          paddingBottom: paddingBottom ?? insets.bottom,
+          paddingLeft: paddingLeft ?? insets.left,
+          paddingRight: paddingRight ?? insets.right,
+          flex: 1,
+        },
+        props.style,
+      ]}
     >
       {isPadded ? <PaddedView>{children}</PaddedView> : children}
     </SafeAreaView>

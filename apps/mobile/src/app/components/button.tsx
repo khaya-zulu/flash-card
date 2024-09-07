@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, PressableProps } from 'react-native';
 import { theme, ThemeColors } from '../theme';
 
 export const CircleButton = ({
@@ -9,6 +9,7 @@ export const CircleButton = ({
   borderColor,
   children,
   disabled,
+  onPress,
 }: {
   height: number;
   width: number;
@@ -16,6 +17,7 @@ export const CircleButton = ({
   children: ReactNode;
   disabled?: boolean;
   borderColor?: ThemeColors;
+  onPress?: PressableProps['onPress'];
 }) => {
   const bg = backgroundColor ? theme.colors[backgroundColor] : '#fff';
   const bColor = borderColor ? theme.colors[borderColor] : '#fff';
@@ -35,6 +37,7 @@ export const CircleButton = ({
         borderWidth: 1,
       }}
       disabled={disabled}
+      onPress={onPress}
     >
       {children}
     </Pressable>

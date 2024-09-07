@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 const fonts = {
   base: '16px',
+  lg: '20px',
 };
 
 export const Text = styled.Text<{ fontSize?: keyof typeof fonts }>`
