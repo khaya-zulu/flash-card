@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'moss',
+  displayName: 'flashcards',
   resolver: '@nx/jest/plugins/resolver',
   preset: 'jest-expo',
   moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
