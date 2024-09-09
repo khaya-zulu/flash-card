@@ -6,18 +6,18 @@ export class AppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const table = new dynamodb.TableV2(this, 'Cards', {
-      partitionKey: { name: 'cardIndex', type: dynamodb.AttributeType.STRING },
-      sortKey: { name: 'collectionName', type: dynamodb.AttributeType.STRING },
-      billing: dynamodb.Billing.provisioned({
-        // video on auto-scaling
-        // https://youtu.be/-um_HJWcHtA?si=MENFTnj-0WLYLwl6
-        readCapacity: dynamodb.Capacity.autoscaled({
-          minCapacity: 5,
-          maxCapacity: 10,
-        }),
-        writeCapacity: dynamodb.Capacity.fixed(5),
-      }),
+    new dynamodb.TableV2(this, 'Cards', {
+      partitionKey: { name: 'cardId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'collection', type: dynamodb.AttributeType.STRING },
+      billing: dynamodb.Billing.onDemand(),
+    });
+
+    new dynamodb.TableV2(this, 'Collections', {
+      partitionKey: {
+        name: 'collectionId',
+        type: dynamodb.AttributeType.STRING,
+      },
+      billing: dynamodb.Billing.onDemand(),
     });
   }
 }
