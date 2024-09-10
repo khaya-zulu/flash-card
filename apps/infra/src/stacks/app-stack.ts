@@ -8,7 +8,10 @@ export class AppStack extends Stack {
 
     new dynamodb.TableV2(this, 'Cards', {
       partitionKey: { name: 'cardId', type: dynamodb.AttributeType.STRING },
-      sortKey: { name: 'collection', type: dynamodb.AttributeType.STRING },
+      sortKey: {
+        name: 'collection#indexOrder',
+        type: dynamodb.AttributeType.STRING,
+      },
       billing: dynamodb.Billing.onDemand(),
     });
 
