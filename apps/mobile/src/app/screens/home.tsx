@@ -4,7 +4,9 @@ import { theme } from '../theme';
 
 import { FlatList, useWindowDimensions, View } from 'react-native';
 
-import { ArrowRight, House, Trash } from 'phosphor-react-native';
+import { ArrowRight, FilePdf, House, Trash } from 'phosphor-react-native';
+
+import { UploadDocument } from '../features/upload-document';
 
 import { SafeArea } from '../components/safe-area';
 import { Text } from '../components/text';
@@ -14,8 +16,7 @@ import { CircleButton } from '../components/button';
 
 import { useNavigation } from '../navigation';
 
-const Folder = () => {
-  const { width } = useWindowDimensions();
+const Folder = ({ width }: { width: number }) => {
   const navigation = useNavigation();
 
   return (
@@ -29,7 +30,7 @@ const Folder = () => {
               style={{
                 position: 'absolute',
                 top,
-                left: top - 5,
+                left: top - idx,
                 height: 300,
                 width: '90%',
               }}
@@ -79,6 +80,8 @@ const Folder = () => {
 };
 
 export const HomeScreen = ({ navigation }: ScreenProps<'Home'>) => {
+  const { width } = useWindowDimensions();
+
   return (
     <SafeArea style={{ backgroundColor: theme.colors.grayLight }}>
       <FlexCol style={{ height: '100%' }}>
@@ -92,9 +95,10 @@ export const HomeScreen = ({ navigation }: ScreenProps<'Home'>) => {
           data={[{ id: '123' }, { id: '234' }, { id: '567' }]}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ gap: 30 }}
+          ListHeaderComponent={() => <UploadDocument width={width} />}
           renderItem={() => (
             <FlexCol style={{ flex: 1, justifyContent: 'center', gap: 40 }}>
-              <Folder />
+              <Folder width={width} />
 
               <FlexCol style={{ paddingHorizontal: 20 }}>
                 <Text fontSize="lg">Periodic Table</Text>

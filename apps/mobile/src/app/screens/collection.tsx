@@ -35,7 +35,7 @@ export const CollectionScreen = ({ navigation }: ScreenProps<'Collection'>) => {
 
   return (
     <FullScreenView style={{ backgroundColor: '#000' }}>
-      <View style={{ flex: 1, backgroundColor: theme.colors.primaryDark }} />
+      <View style={{ flex: 1, backgroundColor: theme.colors.gray }} />
       <View style={{ flex: 1.5, backgroundColor: theme.colors.grayLight }} />
 
       <AbsoluteSafeArea>

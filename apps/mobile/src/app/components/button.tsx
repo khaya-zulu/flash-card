@@ -1,6 +1,54 @@
 import { type ReactNode } from 'react';
-import { Pressable, PressableProps } from 'react-native';
-import { theme, ThemeColors } from '../theme';
+import {
+  Pressable,
+  PressableProps,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
+
+import { Text } from './text';
+
+import { theme, type ThemeColors } from '../theme';
+
+type Props = TouchableOpacityProps & {
+  variant?: 'primaryDark' | 'primaryDark-empty' | 'black-empty';
+};
+
+export const Button = ({
+  children,
+  variant = 'primaryDark',
+  ...props
+}: Props) => {
+  const isEmpty = variant?.includes('empty');
+
+  return (
+    <TouchableOpacity
+      {...props}
+      style={[
+        {
+          backgroundColor: isEmpty
+            ? 'transparent'
+            : theme.colors[variant as ThemeColors],
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          borderRadius: 15,
+        },
+        props.style,
+      ]}
+    >
+      <Text
+        style={{
+          color: !isEmpty
+            ? '#fff'
+            : theme.colors[variant?.replace('-empty', '') as ThemeColors],
+          textAlign: 'center',
+        }}
+      >
+        {children}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
 export const CircleButton = ({
   height,

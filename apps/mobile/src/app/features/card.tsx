@@ -4,8 +4,6 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   interpolate,
   runOnJS,
-  SharedValue,
-  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
