@@ -5,7 +5,9 @@
   },
   "dependencies": {
     "@hono/node-server": "*",
-    "hono": "*"
+    "hono": "*",
+    "@aws-sdk/client-s3": "*",
+    "zod": "*"
   },
   "devDependencies": {
     "@types/node": "*",

@@ -1,6 +1,8 @@
 import { Construct } from 'constructs';
 import { Stack, StackProps } from 'aws-cdk-lib';
+
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 
 export class AppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -21,6 +23,13 @@ export class AppStack extends Stack {
         type: dynamodb.AttributeType.STRING,
       },
       billing: dynamodb.Billing.onDemand(),
+    });
+
+    new s3.Bucket(this, 'Docs', {
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
+      versioned: true,
     });
   }
 }

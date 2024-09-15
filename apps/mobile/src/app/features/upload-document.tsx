@@ -1,16 +1,31 @@
 import * as DocumentPicker from 'expo-document-picker';
+
+import * as FileSystem from 'expo-file-system';
 import { Pressable, TextInput } from 'react-native';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+
+import styled from 'styled-components/native';
+import { FilePdf } from 'phosphor-react-native';
 
 import { theme } from '../theme';
-
-import { FilePdf } from 'phosphor-react-native';
 
 import { FlexCol } from '../components/flex';
 import { Text } from '../components/text';
 import { Button } from '../components/button';
 
 type Asset = DocumentPicker.DocumentPickerAsset;
+
+const Container = styled(FlexCol)<{ width: number }>`
+  height: 400px;
+  width: ${(props) => props.width}px;
+  border-width: 1px;
+  border-radius: 20px;
+  margin-top: 62px;
+  border: ${theme.colors.gray};
+  justify-content: center;
+  align-items: center;
+  background-color: ${theme.colors.white};
+`;
 
 export const UploadDocument = ({
   width,
@@ -19,51 +34,21 @@ export const UploadDocument = ({
   width: number;
   onComplete: (response: any) => void;
 }) => {
+  const uploadTaskRef = useRef<FileSystem.UploadTask>();
+
   const [selectedAsset, setSelectedAsset] = useState<Asset>();
   const [name, setName] = useState('');
 
   // todo-before-review: use toast.promise implementation.
   const [state, setState] = useState<'uploading' | 'timeout' | 'error'>();
 
-  const onCreateDocumentHandler = () => {
-    const xhr = new XMLHttpRequest();
+  const [progress, setProgress] = useState(0);
 
-    xhr.open('POST', `/new/collection/${selectedAsset?.name}`);
-
-    xhr.onload = () => {
-      const response = JSON.parse(xhr.response);
-      onComplete(response);
-    };
-
-    xhr.onerror = (e) => {
-      // toast message
-      setState('error');
-    };
-
-    xhr.ontimeout = (e) => {
-      // toast message
-      setState('timeout');
-    };
-
+  const onUpload = async () => {
     if (selectedAsset) {
-      const formData = new FormData();
-
-      // @ts-expect-error - this should not
-      // be throwing an type error.
-      formData.append('file', {
-        uri: selectedAsset.uri,
-        type: selectedAsset.mimeType ?? '',
-        name: `${selectedAsset.name}.${selectedAsset.mimeType}`,
+      const base64 = await FileSystem.readAsStringAsync(selectedAsset.uri, {
+        encoding: FileSystem.EncodingType.Base64,
       });
-
-      xhr.send(formData);
-
-      xhr.upload.onprogress = ({ total, loaded }) => {
-        const uploadProgress = loaded / total;
-        console.log(uploadProgress);
-
-        setState(undefined);
-      };
     }
   };
 
@@ -71,7 +56,9 @@ export const UploadDocument = ({
     <Pressable
       disabled={!!selectedAsset}
       onPress={async () => {
-        const file = await DocumentPicker.getDocumentAsync();
+        const file = await DocumentPicker.getDocumentAsync({
+          copyToCacheDirectory: true,
+        });
 
         if (!file.canceled) {
           const [singleAsset] = file.assets;
@@ -79,21 +66,7 @@ export const UploadDocument = ({
         }
       }}
     >
-      <FlexCol
-        style={{
-          borderWidth: 1,
-          width: width - 100,
-          height: 400,
-          borderRadius: 20,
-          marginTop: 62,
-          borderColor: theme.colors.gray,
-          borderStyle: 'dashed',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          paddingHorizontal: 20,
-        }}
-      >
+      <Container width={width - 100}>
         {state !== 'uploading' ? (
           <>
             <FilePdf size={30} />
@@ -102,9 +75,8 @@ export const UploadDocument = ({
             {selectedAsset ? (
               <FlexCol
                 style={{
-                  width: '100%',
                   borderColor: theme.colors.gray,
-                  borderWidth: 1,
+                  borderTopWidth: 1,
                   borderRadius: 20,
                   marginTop: 10,
                   padding: 15,
@@ -121,11 +93,12 @@ export const UploadDocument = ({
                   onChangeText={setName}
                   value={name}
                 />
-                <Button onPress={onCreateDocumentHandler}>Create</Button>
+                <Button onPress={onUpload}>Create</Button>
                 <Button
                   variant="black-empty"
                   onPress={() => {
                     setSelectedAsset(undefined);
+                    setName('');
                   }}
                 >
                   Re-upload document
@@ -134,8 +107,16 @@ export const UploadDocument = ({
             ) : null}
           </>
         ) : null}
-        {state === 'uploading' ? <Text>Uplaoding...</Text> : null}
-      </FlexCol>
+        {state === 'uploading' ? (
+          <Pressable
+            onPress={() => {
+              void uploadTaskRef.current?.cancelAsync();
+            }}
+          >
+            <Text>Uplaoding {progress}%...</Text>
+          </Pressable>
+        ) : null}
+      </Container>
     </Pressable>
   );
 };

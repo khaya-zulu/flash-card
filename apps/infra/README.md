@@ -20,6 +20,10 @@ nx destroy infra
 - [Table Capacity Modes - Amazon DynamoDB Core Concepts](https://www.youtube.com/watch?v=DdXK1XYJduw)
 - [DynamoDB on-demand and provisioned capacity](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/capacity.html)
 
+## S3
+
+- [Security best practices for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html)
+
 ### Random notes
 
 - access patterns (very important to think about how your data will be called)
